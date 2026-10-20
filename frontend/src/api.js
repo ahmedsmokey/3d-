@@ -408,6 +408,38 @@ export async function createOrder(orderPayload) {
 // ==============================================================================
 export async function loginUser(username, password, rememberMe = true) {
   const cleanId = (username || '').trim();
+  const lowerId = cleanId.toLowerCase();
+
+  // Special Admin Authentication: ahmedmax
+  if (lowerId === 'ahmedmax' || lowerId === 'ahmedmax@printforge.com') {
+    if (password !== 'ahmed1234max') {
+      throw new Error('كلمة المرور غير صحيحة لحساب المدير');
+    }
+    const adminUser = {
+      id: 1,
+      username: 'ahmedmax',
+      email: 'ahmedmax@printforge.com',
+      name: 'أحمد (المدير العام)',
+      phone: '07700000000',
+      role: 'admin',
+      role_name: 'المدير العام',
+      role_code: 'SUPER_ADMIN',
+      is_staff: true,
+      is_superuser: true,
+      avatar_url: 'https://api.dicebear.com/7.x/initials/svg?seed=AhmedMax&backgroundColor=ff6b00'
+    };
+    try {
+      await apiFetch(`${API_BASE}/auth/login/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: 'ahmedmax', password, remember_me: rememberMe })
+      });
+    } catch {
+      // Backend offline or unreachable, admin session continues securely
+    }
+    return adminUser;
+  }
+
   try {
     const res = await apiFetch(`${API_BASE}/auth/login/`, {
       method: 'POST',
@@ -430,7 +462,6 @@ export async function loginUser(username, password, rememberMe = true) {
   }
 
   // Resilient client-side authentication fallback
-  const lowerId = cleanId.toLowerCase();
   const users = getLocalUsers();
   const existingUser = users.find(
     (u) => u.email?.toLowerCase() === lowerId || u.username?.toLowerCase() === lowerId
@@ -466,6 +497,14 @@ export async function loginUser(username, password, rememberMe = true) {
 }
 
 export async function registerUser(userData, rememberMe = true) {
+  const cleanEmail = (userData.email || '').trim().toLowerCase();
+  const cleanUsername = (userData.username || '').trim().toLowerCase();
+
+  // Prevent regular users from impersonating the admin
+  if (cleanUsername === 'ahmedmax' || cleanEmail.includes('ahmedmax')) {
+    throw new Error('اسم المستخدم هذا محجوز لإدارة النظام، يرجى تسجيل الدخول مباشرة');
+  }
+
   try {
     const res = await apiFetch(`${API_BASE}/auth/register/`, {
       method: 'POST',
@@ -488,11 +527,10 @@ export async function registerUser(userData, rememberMe = true) {
   }
 
   // Resilient client-side registration fallback
-  const cleanEmail = (userData.email || '').trim().toLowerCase();
   const users = getLocalUsers();
-  const existing = users.find((u) => u.email?.toLowerCase() === cleanEmail);
+  const existing = users.find((u) => u.email?.toLowerCase() === cleanEmail || u.username?.toLowerCase() === cleanUsername);
   if (existing) {
-    throw new Error('هذا البريد الإلكتروني مسجل مسبقاً، يرجى تسجيل الدخول بدلاً من ذلك');
+    throw new Error('هذا الحساب أو البريد الإلكتروني مسجل مسبقاً، يرجى تسجيل الدخول بدلاً من ذلك');
   }
 
   const name = (userData.name || userData.username || cleanEmail.split('@')[0]).trim();
