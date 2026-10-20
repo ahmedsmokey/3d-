@@ -972,5 +972,33 @@
       "compatible_parts_count": 0
     }
   ],
-  "banners": []
+  "banners": [
+    {
+      "id": 10,
+      "title": "",
+      "image": "/media/banners/Gemini_Generated_Image_k8xxa7k8xxa7k8xx.jpg",
+      "image_url": "/media/banners/Gemini_Generated_Image_k8xxa7k8xxa7k8xx.jpg",
+      "order": 1,
+      "is_active": false,
+      "created_at": "2026-10-15T04:37:13.033929Z"
+    },
+    {
+      "id": 12,
+      "title": "",
+      "image": "/media/banners/Gemini_Generated_Image_bjle9xbjle9xbjle.jpg",
+      "image_url": "/media/banners/Gemini_Generated_Image_bjle9xbjle9xbjle.jpg",
+      "order": 2,
+      "is_active": false,
+      "created_at": "2026-10-15T04:37:58.307184Z"
+    },
+    {
+      "id": 9,
+      "title": "",
+      "image": "/media/banners/Gemini_Generated_Image_3qhif3qhif3qhif3.jpg",
+      "image_url": "/media/banners/Gemini_Generated_Image_3qhif3qhif3qhif3.jpg",
+      "order": 3,
+      "is_active": false,
+      "created_at": "2026-10-15T04:35:11.985148Z"
+    }
+  ]
 }

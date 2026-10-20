@@ -25,37 +25,26 @@ export default function HeroSlider({
       }));
     }
     return [
-      // 1. 3D Printer & Stream of Spare Parts Banner
       {
         id: 'banner-slide-1',
         type: 'brand_banner',
-        image: '/images/banner_slide_1.png',
+        image: '/media/banners/Gemini_Generated_Image_k8xxa7k8xxa7k8xx.jpg',
         titleEn: '3D Printer & Components Ecosystem',
         titleAr: 'طابعات ثلاثية الأبعاد ومكونات متكاملة'
       },
-      // 2. Extruders, Motors & Hotends Components
       {
         id: 'banner-slide-2',
         type: 'brand_banner',
-        image: '/images/banner_slide_2.png',
+        image: '/media/banners/Gemini_Generated_Image_bjle9xbjle9xbjle.jpg',
         titleEn: 'High Performance Extruders & Hotends',
         titleAr: 'رؤوس تسخين ومحركات احترافية'
       },
-      // 3. Precision Nozzles & Mechanical Gears
       {
         id: 'banner-slide-3',
         type: 'brand_banner',
-        image: '/images/banner_slide_3.png',
+        image: '/media/banners/Gemini_Generated_Image_3qhif3qhif3qhif3.jpg',
         titleEn: 'Precision Nozzles & Gears Components',
         titleAr: 'فوهات دقيقة وتروس ميكانيكية'
-      },
-      // 4. Dynamic Stream 3D Printer Hardware
-      {
-        id: 'banner-slide-4',
-        type: 'brand_banner',
-        image: '/images/banner_slide_4.png',
-        titleEn: 'Advanced 3D Hardware & Accessories',
-        titleAr: 'طابعات متطورة وقطع غيار أصلية'
       }
     ];
   }, [banners]);
