@@ -58,28 +58,25 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess, lang }) {
   const [regEmail, setRegEmail] = useState('');
   const [regPassword, setRegPassword] = useState('');
 
-  // Google Accounts state & "Add Another Account" mode
+  // Google Accounts state: Start empty and purge old mock accounts
   const [googleAccounts, setGoogleAccounts] = useState(() => {
     try {
       const saved = localStorage.getItem('printforge_google_accounts');
-      if (saved) return JSON.parse(saved);
-    } catch {}
-    return [
-      {
-        id: 'goog_1',
-        name: 'Ahmed 3D Maker',
-        email: 'ahmed.maker3d@gmail.com',
-        phone: '+964 770 123 4567',
-        avatarColor: '#EA4335'
-      },
-      {
-        id: 'goog_2',
-        name: 'أحمد العراقي',
-        email: 'ahmed.iraqi.tech@gmail.com',
-        phone: '+964 780 987 6543',
-        avatarColor: '#4285F4'
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          // Permanently purge any dummy demo accounts
+          return parsed.filter(
+            (acc) =>
+              acc.id !== 'goog_1' &&
+              acc.id !== 'goog_2' &&
+              !acc.email?.toLowerCase().includes('maker3d') &&
+              !acc.email?.toLowerCase().includes('iraqi.tech')
+          );
+        }
       }
-    ];
+    } catch {}
+    return [];
   });
 
   const [isAddingGoogleAccount, setIsAddingGoogleAccount] = useState(false);
@@ -238,9 +235,9 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess, lang }) {
       }
     }
 
-    // Default to the in-app Google Accounts Chooser
+    // Default to the in-app Google Accounts view
     setMode('google_chooser');
-    setIsAddingGoogleAccount(false);
+    setIsAddingGoogleAccount(googleAccounts.length === 0);
   };
 
   // Add a new custom Google account to the device list
@@ -276,7 +273,13 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess, lang }) {
   // Delete an account from the local list
   const handleDeleteGoogleAccount = (e, accId) => {
     e.stopPropagation();
-    setGoogleAccounts(prev => prev.filter(acc => acc.id !== accId));
+    setGoogleAccounts((prev) => {
+      const updated = prev.filter((acc) => acc.id !== accId);
+      if (updated.length === 0) {
+        setIsAddingGoogleAccount(true);
+      }
+      return updated;
+    });
   };
 
   // Quick Preset demo credentials
@@ -315,6 +318,31 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess, lang }) {
                 gap: '12px'
               }}
             >
+              {/* Back Link to Normal Sign In */}
+              <button
+                type="button"
+                onClick={() => {
+                  setMode('auth');
+                  setErrorMsg('');
+                  setSuccessMsg('');
+                }}
+                style={{
+                  alignSelf: isAr ? 'flex-start' : 'flex-end',
+                  background: 'none',
+                  border: 'none',
+                  color: '#64748b',
+                  fontSize: '12px',
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  fontWeight: 700,
+                  padding: '2px 0'
+                }}
+              >
+                {isAr ? '← العودة لخيارات تسجيل الدخول' : '← Back to Sign In'}
+              </button>
+
               {/* Google Brand Header */}
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
                 <svg width="32" height="32" viewBox="0 0 24 24" className="neo-google-svg">
@@ -324,7 +352,13 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess, lang }) {
                   <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
                 </svg>
                 <h3 className="neo-title" style={{ fontSize: '20px' }}>
-                  {isAr ? 'اختيار حساب Google' : 'Choose an account'}
+                  {isAddingGoogleAccount || googleAccounts.length === 0
+                    ? isAr
+                      ? 'تسجيل الدخول عبر Google'
+                      : 'Sign in with Google'
+                    : isAr
+                    ? 'اختيار حساب Google'
+                    : 'Choose an account'}
                 </h3>
                 <span style={{ fontSize: '12px', color: '#64748b', fontWeight: 600 }}>
                   {isAr ? 'للمتابعة وتسجيل الدخول إلى 3D PARTS' : 'to continue to 3D PARTS'}
@@ -447,7 +481,13 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess, lang }) {
                     type="button"
                     className="neo-submit-btn"
                     style={{ width: '100%', background: '#f1f5f9', color: '#1e293b' }}
-                    onClick={() => setIsAddingGoogleAccount(false)}
+                    onClick={() => {
+                      if (googleAccounts.length > 0) {
+                        setIsAddingGoogleAccount(false);
+                      } else {
+                        setMode('auth');
+                      }
+                    }}
                   >
                     {isAr ? 'إلغاء' : 'Cancel'}
                   </button>
