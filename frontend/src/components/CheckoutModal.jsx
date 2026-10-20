@@ -71,7 +71,20 @@ export default function CheckoutModal({
       total_amount: subtotal,
       cart_items: cart.map((i) => ({
         product_id: i.product.id,
-        quantity: i.quantity
+        quantity: i.quantity,
+        product_name_ar: i.product.name_ar,
+        product_name_en: i.product.name_en,
+        product_image: i.product.image_url,
+        unit_price: i.product.price
+      })),
+      items: cart.map((i) => ({
+        id: i.product.id,
+        product_id: i.product.id,
+        quantity: i.quantity,
+        product_name_ar: i.product.name_ar,
+        product_name_en: i.product.name_en,
+        product_image: i.product.image_url,
+        unit_price: i.product.price
       }))
     };
 

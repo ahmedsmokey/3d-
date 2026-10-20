@@ -1228,6 +1228,17 @@ export default function AdminDashboard({
           </button>
 
           <button
+            className={`admin-nav-item ${activeTab === 'orders' ? 'active' : ''}`}
+            onClick={() => setActiveTab('orders')}
+          >
+            <ShoppingBag size={19} className="text-orange" />
+            <span>{lang === 'ar' ? 'إدارة الطلبات والشحن' : 'Orders & Shipments'}</span>
+            <span className="admin-count-pill" style={{ background: '#ff6b00', color: '#fff', fontWeight: 800 }}>
+              {orders.length}
+            </span>
+          </button>
+
+          <button
             className={`admin-nav-item ${activeTab === 'products' ? 'active' : ''}`}
             onClick={() => setActiveTab('products')}
           >
@@ -1286,15 +1297,6 @@ export default function AdminDashboard({
           </button>
 
           <button
-            className={`admin-nav-item ${activeTab === 'orders' ? 'active' : ''}`}
-            onClick={() => setActiveTab('orders')}
-          >
-            <ShoppingBag size={19} />
-            <span>{lang === 'ar' ? 'إدارة الطلبات والشحن' : 'Orders & Shipments'}</span>
-            <span className="admin-count-pill">{orders.length}</span>
-          </button>
-
-          <button
             className={`admin-nav-item ${activeTab === 'customers' ? 'active' : ''}`}
             onClick={() => setActiveTab('customers')}
           >
@@ -1344,7 +1346,12 @@ export default function AdminDashboard({
             <div className="overview-tab-view animate-fade">
               {/* KPI Stat Cards */}
               <div className="kpi-grid">
-                <div className="kpi-card glass-panel">
+                <div
+                  className="kpi-card glass-panel"
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => setActiveTab('orders')}
+                  title={lang === 'ar' ? 'اضغط لعرض المبيعات والطلبات' : 'Click to view orders'}
+                >
                   <div className="kpi-header">
                     <span className="kpi-title">{lang === 'ar' ? 'إجمالي المبيعات' : 'Total Revenue'}</span>
                     <div className="kpi-icon-box bg-orange-soft">
@@ -1357,16 +1364,21 @@ export default function AdminDashboard({
                   </div>
                 </div>
 
-                <div className="kpi-card glass-panel">
+                <div
+                  className="kpi-card glass-panel"
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => setActiveTab('orders')}
+                  title={lang === 'ar' ? 'اضغط لعرض الطلبات' : 'Click to view orders'}
+                >
                   <div className="kpi-header">
                     <span className="kpi-title">{lang === 'ar' ? 'عدد الطلبات' : 'Total Orders'}</span>
                     <div className="kpi-icon-box bg-orange-soft">
                       <ShoppingBag size={20} className="text-orange" />
                     </div>
                   </div>
-                  <div className="kpi-value">{stats?.kpis?.total_orders || orders.length}</div>
+                  <div className="kpi-value">{stats?.kpis?.total_orders ?? orders.length}</div>
                   <div className="kpi-trend text-blue">
-                    {lang === 'ar' ? 'متوسط الطلب:' : 'Avg:'} ${stats?.kpis?.avg_order_value?.toFixed(1) || '0'}
+                    {lang === 'ar' ? 'عرض كافة الطلبات ↗' : 'View all orders ↗'}
                   </div>
                 </div>
 
@@ -4249,13 +4261,13 @@ export default function AdminDashboard({
                 {lang === 'ar' ? 'القطع المطلوبة:' : 'Ordered Items:'}
               </h4>
               <div className="order-items-mini-list">
-                {selectedOrderDetails.items?.map((item) => (
-                  <div key={item.id} className="order-item-mini-row">
-                    <img src={item.product_image} alt="" className="item-mini-img" />
+                {(selectedOrderDetails.items || selectedOrderDetails.cart_items || []).map((item, idx) => (
+                  <div key={item.id || idx} className="order-item-mini-row">
+                    <img src={item.product_image || 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=400&q=80'} alt="" className="item-mini-img" />
                     <div>
-                      <div>{lang === 'ar' ? item.product_name_ar : item.product_name_en}</div>
+                      <div>{lang === 'ar' ? (item.product_name_ar || item.name || 'منتج') : (item.product_name_en || item.name || 'Product')}</div>
                       <div className="text-muted" style={{ fontSize: '0.8rem' }}>
-                        الكمية: {item.quantity} × {Number(item.unit_price).toLocaleString()} د.ع
+                        الكمية: {item.quantity} × {Number(item.unit_price || 0).toLocaleString()} د.ع
                       </div>
                     </div>
                   </div>
