@@ -1,0 +1,607 @@
+/* From Uiverse.io by andrew-demchenk0 - Neo-Brutalist 3D Flip Card with Google Login */
+
+.neo-auth-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.neo-auth-modal {
+  --input-focus: #ff6b00;
+  --font-color: #1e293b;
+  --font-color-sub: #64748b;
+  --bg-color: #ffffff;
+  --card-bg: #e2e8f0;
+  --main-color: #1e293b;
+  --btn-bg: #ffffff;
+  --btn-primary: #ff6b00;
+
+  /* Card Sizing */
+  --card-width: 340px;
+  --card-height: 520px;
+  --input-width: 280px;
+
+  font-family: "Cairo", "Tajawal", system-ui, -apple-system, sans-serif;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+/* Close Button (Neo-Brutalist) */
+.neo-close-btn {
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  border: 2px solid var(--main-color);
+  background-color: #ff5252;
+  color: #ffffff;
+  box-shadow: 3px 3px var(--main-color);
+  font-size: 16px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  z-index: 30;
+}
+
+.neo-close-btn:hover {
+  background-color: #e11d48;
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px var(--main-color);
+}
+
+.neo-close-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px var(--main-color);
+}
+
+/* Switch & Header Container */
+.neo-switch-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 20px;
+  direction: ltr !important;
+  user-select: none;
+}
+
+.neo-switch-text {
+  font-size: 15px;
+  font-weight: 800;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 2px 4px;
+}
+
+.neo-switch-text.active {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  color: #ffedd5;
+}
+
+.neo-switch-text.inactive {
+  opacity: 0.55;
+  text-decoration: none;
+}
+
+/* The Neo-Brutalist Toggle Switch */
+.neo-switch-label {
+  position: relative;
+  display: inline-block;
+  width: 54px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.neo-toggle {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+.neo-slider {
+  box-sizing: border-box;
+  border-radius: 6px;
+  border: 2px solid var(--main-color);
+  box-shadow: 3.5px 3.5px var(--main-color);
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--bg-color);
+  transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.neo-slider:before {
+  box-sizing: border-box;
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  border: 2px solid var(--main-color);
+  border-radius: 5px;
+  left: -1px;
+  bottom: 0px;
+  background-color: var(--bg-color);
+  box-shadow: 0 2.5px 0 var(--main-color);
+  transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.neo-toggle:checked + .neo-slider {
+  background-color: var(--input-focus);
+}
+
+.neo-toggle:checked + .neo-slider:before {
+  transform: translateX(28px);
+}
+
+/* 3D Flip Card Scene */
+.neo-card-scene {
+  position: relative;
+  perspective: 1000px;
+  width: var(--card-width);
+  height: var(--card-height);
+  direction: ltr !important;
+}
+
+.neo-card-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
+}
+
+.neo-toggle:checked ~ .neo-card-scene .neo-card-inner,
+.neo-card-inner.is-flipped {
+  transform: rotateY(180deg);
+}
+
+/* Faces */
+.neo-card-front,
+.neo-card-back {
+  padding: 22px 20px;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  background: var(--card-bg);
+  border-radius: 8px;
+  border: 2px solid var(--main-color);
+  box-shadow: 5px 5px var(--main-color);
+  box-sizing: border-box;
+}
+
+.neo-card-back {
+  transform: rotateY(180deg);
+}
+
+/* Title */
+.neo-title {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 900;
+  text-align: center;
+  color: var(--main-color);
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+}
+
+/* Google Sign-In Button */
+.neo-google-btn {
+  width: var(--input-width);
+  height: 42px;
+  border-radius: 6px;
+  border: 2px solid var(--main-color);
+  background-color: #ffffff;
+  box-shadow: 3.5px 3.5px var(--main-color);
+  font-size: 13.5px;
+  font-weight: 800;
+  color: var(--font-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.15s ease;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.neo-google-btn[dir="rtl"] {
+  direction: rtl;
+  flex-direction: row;
+}
+
+.neo-google-btn[dir="ltr"] {
+  direction: ltr;
+  flex-direction: row;
+}
+
+.neo-google-svg {
+  flex-shrink: 0;
+}
+
+.neo-card-front[dir="rtl"],
+.neo-card-back[dir="rtl"] {
+  direction: rtl;
+}
+
+.neo-google-btn:hover {
+  background-color: #f8fafc;
+  transform: translate(-1px, -1px);
+  box-shadow: 4.5px 4.5px var(--main-color);
+}
+
+.neo-google-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px var(--main-color);
+}
+
+/* Divider with text */
+.neo-divider {
+  display: flex;
+  align-items: center;
+  width: var(--input-width);
+  gap: 10px;
+  margin: 2px 0;
+}
+
+.neo-divider::before,
+.neo-divider::after {
+  content: "";
+  flex: 1;
+  height: 2px;
+  background: var(--main-color);
+  opacity: 0.25;
+}
+
+.neo-divider span {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--font-color-sub);
+  text-transform: uppercase;
+}
+
+/* Form */
+.neo-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.neo-input-wrapper {
+  position: relative;
+  width: var(--input-width);
+}
+
+.neo-input {
+  width: 100%;
+  height: 42px;
+  border-radius: 6px;
+  border: 2px solid var(--main-color);
+  background-color: var(--bg-color);
+  box-shadow: 3.5px 3.5px var(--main-color);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--font-color);
+  padding: 6px 36px 6px 14px;
+  outline: none;
+  font-family: inherit;
+  transition: all 0.15s ease;
+  box-sizing: border-box;
+  text-align: right;
+}
+
+.neo-input::placeholder {
+  color: var(--font-color-sub);
+  opacity: 0.85;
+  font-weight: 600;
+}
+
+.neo-input:focus {
+  border: 2px solid var(--input-focus);
+  box-shadow: 4px 4px var(--input-focus);
+}
+
+/* Input Icon */
+.neo-input-icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 12px;
+  color: #64748b;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+}
+
+/* Password Eye Toggle */
+.neo-eye-toggle {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #64748b;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.neo-eye-toggle:hover {
+  color: var(--main-color);
+}
+
+/* Remember Me Checkbox */
+.neo-remember-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: var(--input-width);
+  margin-top: -2px;
+  margin-bottom: 2px;
+  user-select: none;
+}
+
+.neo-remember-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--font-color);
+  direction: rtl;
+  user-select: none;
+}
+
+.neo-remember-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.neo-remember-box {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 2px solid var(--main-color);
+  background: #ffffff;
+  box-shadow: 2px 2px var(--main-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.neo-remember-input:checked + .neo-remember-box {
+  background: #2563eb;
+  border-color: var(--main-color);
+}
+
+.neo-remember-label:hover .neo-remember-box {
+  transform: translate(-1px, -1px);
+  box-shadow: 2.5px 2.5px var(--main-color);
+}
+
+/* Demo Chip */
+.neo-demo-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--input-width);
+}
+
+.neo-demo-chip {
+  background: #fef08a;
+  border: 1.5px solid var(--main-color);
+  border-radius: 5px;
+  box-shadow: 2px 2px var(--main-color);
+  font-size: 11.5px;
+  font-weight: 800;
+  color: var(--main-color);
+  padding: 3px 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.neo-demo-chip:hover {
+  background: #fde047;
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px var(--main-color);
+}
+
+.neo-demo-chip:active {
+  transform: translate(1px, 1px);
+  box-shadow: 0px 0px var(--main-color);
+}
+
+/* Submit Buttons */
+.neo-submit-btn {
+  margin-top: 4px;
+  width: var(--input-width);
+  height: 44px;
+  border-radius: 6px;
+  border: 2px solid var(--main-color);
+  background-color: var(--btn-primary);
+  color: #ffffff;
+  box-shadow: 3.5px 3.5px var(--main-color);
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: inherit;
+  letter-spacing: 0.3px;
+}
+
+.neo-submit-btn.alt {
+  background-color: #2563eb;
+}
+
+.neo-submit-btn:hover {
+  background-color: #ea580c;
+  transform: translate(-1px, -1px);
+  box-shadow: 4.5px 4.5px var(--main-color);
+}
+
+.neo-submit-btn.alt:hover {
+  background-color: #1d4ed8;
+}
+
+.neo-submit-btn:active {
+  box-shadow: 1px 1px var(--main-color);
+  transform: translate(2.5px, 2.5px);
+}
+
+.neo-submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Alert Boxes (Error / Success) */
+.neo-alert {
+  width: var(--input-width);
+  padding: 6px 12px;
+  border: 1.5px solid var(--main-color);
+  border-radius: 5px;
+  box-shadow: 2px 2px var(--main-color);
+  font-size: 12px;
+  font-weight: 800;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-sizing: border-box;
+}
+
+.neo-alert-error {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.neo-alert-success {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+/* Google Chooser Enhanced Styles */
+.neo-google-account-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #ffffff;
+  border: 2px solid var(--main-color);
+  border-radius: 6px;
+  box-shadow: 3px 3px var(--main-color);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  position: relative;
+}
+
+.neo-google-account-card:hover {
+  transform: translate(-1.5px, -1.5px);
+  box-shadow: 4.5px 4.5px var(--main-color);
+  background-color: #f8fafc;
+}
+
+.neo-google-account-card:active {
+  transform: translate(1.5px, 1.5px);
+  box-shadow: 1px 1px var(--main-color);
+}
+
+.neo-acc-delete-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #94a3b8;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.neo-acc-delete-btn:hover {
+  color: #ef4444;
+  background-color: #fee2e2;
+}
+
+.neo-add-google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 12px;
+  background: #ffffff;
+  border: 2px dashed var(--main-color);
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #2563eb;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.neo-add-google-btn:hover {
+  background-color: #eff6ff;
+  border-style: solid;
+}
+
+/* Small Screens */
+@media (max-width: 420px) {
+  .neo-auth-modal {
+    --card-width: 92vw;
+    --card-height: 535px;
+    --input-width: 82vw;
+  }
+}
+

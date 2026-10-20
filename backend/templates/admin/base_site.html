@@ -1,0 +1,19 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}{{ title }} | {{ site_title|default:_('لوحة الإدارة') }}{% endblock %}
+
+{% block branding %}
+<div id="site-name">
+  <a href="{% url 'admin:index' %}" style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
+    <span style="font-size: 1.3rem; font-weight: 900; background: linear-gradient(135deg, #ff6b00, #ff8533); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">3D Parts</span>
+    <span style="font-size: 0.95rem; font-weight: 700; color: #94a3b8;">إدارة النظام</span>
+  </a>
+</div>
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'admin/css/custom_dark_admin.css' %}">
+<script src="{% static 'admin/js/custom_dark_admin.js' %}"></script>
+{% endblock %}

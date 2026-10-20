@@ -1,0 +1,604 @@
+/* From Uiverse.io by mamyapro123 - Refined Professional Doodle Flip Login & Sign Up */
+.doodle-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.doodle-wrapper {
+  /* Color Palette */
+  --ink: #222222;
+  --paper-front: #fffdf2;
+  --paper-back: #edf4ff;
+  --bg-color: #ffffff;
+  --primary-btn: #ff6565;
+  --primary-btn-hover: #ff4747;
+  --secondary-btn: #38c7be;
+  --secondary-btn-hover: #26b3aa;
+  --switch-bg: #ffd84d;
+  --input-focus: #ff6b00;
+
+  /* Sizing - Balanced & Compact with zero empty space */
+  --card-width: 360px;
+  --card-height: 440px;
+  --input-width: 300px;
+  --input-height: 42px;
+  --btn-width: 220px;
+  --btn-height: 44px;
+
+  --border-width: 2px;
+  --shadow-offset: 4.5px;
+
+  /* Doodle Border Radiuses */
+  --sketch-radius-1: 10px 24px 10px 24px / 24px 10px 24px 10px;
+  --sketch-radius-2: 24px 10px 24px 10px / 10px 24px 10px 24px;
+  --sketch-radius-btn: 18px 6px 18px 6px / 6px 18px 6px 18px;
+
+  font-family: "Cairo", "Tajawal", "Chalkboard SE", "Comic Sans MS", system-ui, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+}
+
+/* Close Button */
+.doodle-close-btn {
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #ff5252;
+  border: 2px solid var(--ink);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 2.5px 2.5px 0px var(--ink);
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 30;
+}
+
+.doodle-close-btn:hover {
+  background: #e11d48;
+  transform: scale(1.12) rotate(90deg);
+  box-shadow: 3.5px 3.5px 0px var(--ink);
+}
+
+.doodle-close-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0px 0px 0px var(--ink);
+}
+
+/* Checkbox Toggle */
+.doodle-toggle {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Header & Switch */
+.doodle-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+  z-index: 5;
+  direction: ltr !important;
+}
+
+.doodle-mode-text {
+  font-size: 16px;
+  font-weight: 800;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+  transition: opacity 0.25s, transform 0.2s;
+  cursor: pointer;
+  user-select: none;
+}
+
+.doodle-mode-text:hover {
+  transform: scale(1.05);
+}
+
+.doodle-toggle:not(:checked) ~ .doodle-header .signup-text {
+  opacity: 0.5;
+}
+.doodle-toggle:checked ~ .doodle-header .login-text {
+  opacity: 0.5;
+}
+
+.doodle-switch-label {
+  position: relative;
+  display: inline-block;
+  width: 52px;
+  height: 26px;
+  background-color: var(--switch-bg);
+  border: var(--border-width) solid var(--ink);
+  border-radius: 20px;
+  cursor: pointer;
+  box-shadow: 2px 2px 0px var(--ink);
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.doodle-switch-label:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px var(--ink);
+}
+
+.doodle-switch-handle {
+  position: absolute;
+  top: 2px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  background-color: var(--bg-color);
+  border: var(--border-width) solid var(--ink);
+  border-radius: 50%;
+  transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.doodle-toggle:checked ~ .doodle-header .doodle-switch-label .doodle-switch-handle {
+  transform: translateX(25px);
+}
+
+/* 3D Scene Setup */
+.doodle-card-scene {
+  position: relative;
+  perspective: 1000px;
+  width: var(--card-width);
+  height: var(--card-height);
+  z-index: 2;
+  direction: ltr !important;
+}
+
+/* Decorative SVGs */
+.doodle-svg {
+  position: absolute;
+  z-index: 10;
+  pointer-events: none;
+}
+.doodle-star {
+  top: -22px;
+  left: -28px;
+  width: 44px;
+  height: 44px;
+  animation: float-star 4s ease-in-out infinite;
+}
+.doodle-sparkle {
+  bottom: -18px;
+  right: -22px;
+  width: 38px;
+  height: 38px;
+  animation: float-sparkle 4s ease-in-out infinite 1s;
+}
+.doodle-swirl {
+  top: 25px;
+  right: -26px;
+  width: 30px;
+  height: 30px;
+  animation: float-swirl 4s ease-in-out infinite 2s;
+}
+
+@keyframes float-star {
+  0%, 100% {
+    transform: translateY(0) rotate(-15deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(-10deg);
+  }
+}
+@keyframes float-sparkle {
+  0%, 100% {
+    transform: translateY(0) rotate(10deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(15deg);
+  }
+}
+@keyframes float-swirl {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(5deg);
+  }
+}
+
+/* Card Inner & Faces */
+.doodle-card-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1);
+}
+
+.doodle-toggle:checked ~ .doodle-card-scene .doodle-card-inner {
+  transform: rotateY(180deg);
+}
+
+.doodle-card-front,
+.doodle-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Eliminates empty void */
+  gap: 12px; /* Tight, professional distribution */
+  padding: 20px 22px;
+  box-sizing: border-box;
+  border: var(--border-width) solid var(--ink);
+  border-radius: var(--sketch-radius-1);
+  box-shadow: var(--shadow-offset) var(--shadow-offset) 0px var(--ink);
+
+  /* Lined Notebook Paper Effect */
+  background-image: repeating-linear-gradient(
+    transparent,
+    transparent 29px,
+    rgba(0, 0, 0, 0.05) 29px,
+    rgba(0, 0, 0, 0.05) 30px
+  );
+  background-position: 0 10px;
+}
+
+.doodle-card-front {
+  background-color: var(--paper-front);
+}
+
+.doodle-card-back {
+  background-color: var(--paper-back);
+  transform: rotateY(180deg);
+  border-radius: var(--sketch-radius-2);
+}
+
+/* Top Header section inside Card */
+.doodle-card-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 2px;
+  width: 100%;
+}
+
+.doodle-brand-tag {
+  background: #ffe66d;
+  border: 1.5px solid var(--ink);
+  border-radius: 12px 4px 12px 4px;
+  padding: 2px 10px;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--ink);
+  box-shadow: 1.5px 1.5px 0px var(--ink);
+  margin-bottom: 2px;
+  display: inline-block;
+  letter-spacing: 0.5px;
+}
+
+.doodle-brand-tag-alt {
+  background: #a7f3d0;
+}
+
+.doodle-title {
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--ink);
+  margin: 0;
+  letter-spacing: -0.3px;
+  transform: rotate(-2deg);
+  text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.1);
+  user-select: none;
+  line-height: 1.25;
+}
+
+.doodle-title-alt {
+  transform: rotate(2deg);
+}
+
+.doodle-subtext {
+  font-size: 12px;
+  color: #555555;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.3;
+}
+
+/* Forms */
+.doodle-form {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  width: 100%;
+  align-items: center;
+}
+
+.doodle-input-wrapper {
+  position: relative;
+  width: var(--input-width);
+}
+
+/* Inputs */
+.doodle-input {
+  width: 100%;
+  height: var(--input-height);
+  padding: 6px 36px 6px 14px;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  background-color: var(--bg-color);
+  border: var(--border-width) solid var(--ink);
+  border-radius: var(--sketch-radius-1);
+  box-shadow: 2.5px 2.5px 0px var(--ink);
+  outline: none;
+  transition: all 0.2s ease;
+  text-align: right; /* Proper Arabic alignment */
+}
+
+.doodle-input-ltr {
+  text-align: left;
+  padding: 6px 14px 6px 36px;
+}
+
+.doodle-input::placeholder {
+  color: #777;
+  opacity: 0.85;
+  font-weight: 600;
+}
+
+.doodle-input:hover {
+  transform: translateY(-1.5px);
+  box-shadow: 3.5px 3.5px 0px var(--ink);
+}
+
+.doodle-input:focus,
+.doodle-input:focus-visible {
+  border: var(--border-width) solid var(--input-focus);
+  border-radius: var(--sketch-radius-2);
+  background-color: #ffffff;
+  box-shadow: 3.5px 3.5px 0px var(--ink);
+}
+
+/* Input Icon inside */
+.doodle-input-icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #888888;
+  display: flex;
+  align-items: center;
+}
+
+.doodle-input-icon.end {
+  right: 12px;
+}
+
+.doodle-input-icon.start {
+  left: 12px;
+}
+
+/* Password Toggle Icon */
+.doodle-pass-toggle {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s;
+}
+
+.doodle-pass-toggle:hover {
+  color: var(--ink);
+}
+
+/* Extra Actions Row (Demo & Google) */
+.doodle-extras-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: var(--input-width);
+  margin-top: 2px;
+}
+
+.doodle-demo-chip {
+  background: #ffe66d;
+  border: 1.5px solid var(--ink);
+  border-radius: var(--sketch-radius-btn);
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--ink);
+  cursor: pointer;
+  box-shadow: 2px 2px 0px var(--ink);
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.doodle-demo-chip:hover {
+  transform: translateY(-1.5px);
+  background: #ffd633;
+  box-shadow: 3px 3px 0px var(--ink);
+}
+
+.doodle-demo-chip:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px var(--ink);
+}
+
+.doodle-google-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 1.5px solid var(--ink);
+  border-radius: var(--sketch-radius-btn);
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--ink);
+  cursor: pointer;
+  box-shadow: 2px 2px 0px var(--ink);
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.doodle-google-btn:hover {
+  transform: translateY(-1.5px);
+  box-shadow: 3px 3px 0px var(--ink);
+  background: #f8fafc;
+}
+
+.doodle-google-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px var(--ink);
+}
+
+/* Buttons */
+.doodle-btn {
+  margin-top: 4px;
+  width: var(--btn-width);
+  height: var(--btn-height);
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  color: var(--ink);
+  background-color: var(--primary-btn);
+  border: var(--border-width) solid var(--ink);
+  border-radius: var(--sketch-radius-btn);
+  box-shadow: 3.5px 3.5px 0px var(--ink);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  transform: rotate(-1deg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.doodle-btn-alt {
+  background-color: var(--secondary-btn);
+  transform: rotate(1deg);
+}
+
+.doodle-btn:hover {
+  background-color: var(--primary-btn-hover);
+  transform: translateY(-2px) rotate(-1.5deg);
+  box-shadow: 4.5px 4.5px 0px var(--ink);
+}
+
+.doodle-btn-alt:hover {
+  background-color: var(--secondary-btn-hover);
+  transform: translateY(-2px) rotate(1.5deg);
+}
+
+.doodle-btn:active {
+  transform: translate(2.5px, 2.5px) rotate(0deg);
+  box-shadow: 0px 0px 0px var(--ink);
+}
+
+.doodle-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Doodle Alerts (Error & Success) */
+.doodle-alert {
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 800;
+  border: 1.5px solid var(--ink);
+  border-radius: 10px 4px 10px 4px;
+  box-shadow: 2px 2px 0px var(--ink);
+  width: var(--input-width);
+  box-sizing: border-box;
+  text-align: center;
+  line-height: 1.35;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.doodle-alert-error {
+  background-color: #ffccd5;
+  color: #990022;
+}
+
+.doodle-alert-success {
+  background-color: #d8f3dc;
+  color: #1b4332;
+}
+
+/* Wiggle animation on title */
+.doodle-card-scene:hover .doodle-title {
+  animation: doodle-wiggle 0.5s ease-in-out;
+}
+
+@keyframes doodle-wiggle {
+  0%, 100% {
+    transform: rotate(-2deg);
+  }
+  25% {
+    transform: rotate(1.5deg);
+  }
+  50% {
+    transform: rotate(-3deg);
+  }
+  75% {
+    transform: rotate(1deg);
+  }
+}
+
+/* Responsive adjustment for small screens */
+@media (max-width: 420px) {
+  .doodle-wrapper {
+    --card-width: 92vw;
+    --card-height: 440px;
+    --input-width: 82vw;
+    --btn-width: 82vw;
+  }
+  .doodle-star {
+    left: -12px;
+  }
+  .doodle-sparkle {
+    right: -12px;
+  }
+  .doodle-swirl {
+    right: -12px;
+  }
+}

@@ -1,0 +1,490 @@
+/* ==============================================================================
+   CUSTOM DARK THEME FOR DJANGO ADMIN
+   Matches reference screenshots:
+   - Deep dark background (#070b13)
+   - Cyan column headers (#22d3ee)
+   - Magenta/pink object-tools Add button (#d946ef)
+   - Pink active toggle switches (#ec4899)
+   - Pill badges for roles and statuses
+   - Clean dark table card (#0c111d)
+   ============================================================================== */
+
+:root {
+  --admin-bg-dark: #070b13;
+  --admin-card-bg: #0c111d;
+  --admin-header-bg: #0f172a;
+  --admin-border: #1e293b;
+  --admin-text-main: #f1f5f9;
+  --admin-text-muted: #94a3b8;
+  --admin-cyan: #22d3ee;
+  --admin-magenta: #d946ef;
+  --admin-pink: #ec4899;
+  --admin-green: #22c55e;
+  --admin-red: #ef4444;
+}
+
+html, body {
+  background-color: var(--admin-bg-dark) !important;
+  color: var(--admin-text-main) !important;
+  font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif !important;
+}
+
+#container {
+  background: var(--admin-bg-dark) !important;
+  color: var(--admin-text-main) !important;
+}
+
+/* Header & Navigation */
+#header {
+  background: #090e1a !important;
+  border-bottom: 1px solid var(--admin-border) !important;
+  color: #f8fafc !important;
+  padding: 14px 24px !important;
+}
+
+#branding h1, #branding h1 a:link, #branding h1 a:visited {
+  color: #ffffff !important;
+  font-weight: 800 !important;
+}
+
+#user-tools {
+  color: var(--admin-text-muted) !important;
+}
+#user-tools a {
+  color: #38bdf8 !important;
+  text-decoration: none !important;
+}
+
+/* Breadcrumbs (e.g. Home / Accounts / الموظفين) */
+.breadcrumbs {
+  background: #111827 !important;
+  border: 1px solid var(--admin-border) !important;
+  border-radius: 8px !important;
+  padding: 8px 16px !important;
+  font-size: 0.85rem !important;
+  color: var(--admin-text-muted) !important;
+  margin-bottom: 20px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.breadcrumbs a {
+  color: #e2e8f0 !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+}
+.breadcrumbs a:hover {
+  color: var(--admin-cyan) !important;
+}
+
+/* Main Content & Title */
+#content {
+  background: var(--admin-bg-dark) !important;
+  padding: 24px 32px !important;
+}
+
+#content h1 {
+  font-size: 1.85rem !important;
+  font-weight: 900 !important;
+  color: #ffffff !important;
+  margin-bottom: 20px !important;
+  letter-spacing: -0.4px !important;
+}
+
+/* Object Tools (+ Add Button) */
+.object-tools {
+  margin-top: 0 !important;
+}
+
+.object-tools li a,
+.object-tools a.addlink {
+  background: linear-gradient(135deg, #ec4899, #d946ef) !important;
+  color: #ffffff !important;
+  border-radius: 999px !important;
+  padding: 9px 20px !important;
+  font-weight: 800 !important;
+  font-size: 0.9rem !important;
+  border: none !important;
+  text-decoration: none !important;
+  box-shadow: 0 4px 16px rgba(217, 70, 239, 0.4) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  transition: all 0.2s ease !important;
+}
+
+.object-tools li a:hover,
+.object-tools a.addlink:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 22px rgba(217, 70, 239, 0.55) !important;
+  color: #ffffff !important;
+}
+
+/* Date Hierarchy Tabs (< All dates, August 2026, September 2026) */
+.toplinks, ul.toplinks {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  padding: 0 !important;
+  margin: 0 0 16px 0 !important;
+  list-style: none !important;
+}
+
+.toplinks li, ul.toplinks li {
+  display: inline-block !important;
+}
+
+.toplinks li a, ul.toplinks li a {
+  display: inline-block !important;
+  padding: 6px 14px !important;
+  border-radius: 6px !important;
+  background: #111827 !important;
+  color: #e2e8f0 !important;
+  border: 1px solid var(--admin-border) !important;
+  text-decoration: none !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  transition: all 0.15s ease !important;
+}
+
+.toplinks li a:hover {
+  background: #1e293b !important;
+  color: #ffffff !important;
+  border-color: #334155 !important;
+}
+
+.toplinks li.selected a, ul.toplinks li.selected a {
+  background: #1e293b !important;
+  color: #ffffff !important;
+  border-color: var(--admin-cyan) !important;
+  font-weight: 700 !important;
+}
+
+/* Search Toolbar */
+#toolbar {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin-bottom: 16px !important;
+}
+
+#toolbar form {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+#toolbar #searchbar {
+  background: #111827 !important;
+  border: 1px solid #334155 !important;
+  border-radius: 6px !important;
+  color: #ffffff !important;
+  padding: 7px 14px !important;
+  font-size: 0.88rem !important;
+  min-width: 220px !important;
+  outline: none !important;
+}
+
+#toolbar #searchbar:focus {
+  border-color: var(--admin-cyan) !important;
+  box-shadow: 0 0 0 1px var(--admin-cyan) !important;
+}
+
+#toolbar input[type="submit"] {
+  background: #1e293b !important;
+  color: #ffffff !important;
+  border: 1px solid #334155 !important;
+  border-radius: 6px !important;
+  padding: 7px 18px !important;
+  font-weight: 700 !important;
+  font-size: 0.85rem !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+
+#toolbar input[type="submit"]:hover {
+  background: #334155 !important;
+  color: #ffffff !important;
+}
+
+/* Filter Box / Sidebar */
+#changelist-filter {
+  background: #0f172a !important;
+  border: 1px solid var(--admin-border) !important;
+  border-radius: 8px !important;
+  padding: 16px !important;
+}
+
+#changelist-filter h2 {
+  background: transparent !important;
+  color: var(--admin-cyan) !important;
+  font-size: 0.95rem !important;
+  font-weight: 800 !important;
+  padding: 0 0 10px 0 !important;
+  border-bottom: 1px solid var(--admin-border) !important;
+  margin-bottom: 12px !important;
+}
+
+#changelist-filter h3 {
+  color: #e2e8f0 !important;
+  font-size: 0.82rem !important;
+  font-weight: 700 !important;
+  margin-top: 14px !important;
+}
+
+#changelist-filter ul {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+#changelist-filter li a {
+  color: var(--admin-text-muted) !important;
+  font-size: 0.82rem !important;
+}
+
+#changelist-filter li.selected a {
+  color: var(--admin-cyan) !important;
+  font-weight: 700 !important;
+}
+
+/* Actions Bar (Dropdown + Go + Selected Counter) */
+.actions {
+  background: transparent !important;
+  border: none !important;
+  padding: 10px 0 !important;
+  margin-bottom: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  color: var(--admin-text-muted) !important;
+}
+
+.actions select {
+  background: #111827 !important;
+  border: 1px solid #334155 !important;
+  border-radius: 6px !important;
+  color: #ffffff !important;
+  padding: 6px 12px !important;
+  font-size: 0.85rem !important;
+  outline: none !important;
+}
+
+.actions button.button {
+  background: #1e293b !important;
+  color: #ffffff !important;
+  border: 1px solid #334155 !important;
+  border-radius: 6px !important;
+  padding: 6px 14px !important;
+  font-weight: 700 !important;
+  font-size: 0.85rem !important;
+  cursor: pointer !important;
+}
+
+.actions .action-counter {
+  color: var(--admin-text-muted) !important;
+  font-size: 0.85rem !important;
+  margin-inline-start: 6px !important;
+}
+
+/* Results Table Container */
+#changelist .results {
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  border: 1px solid var(--admin-border) !important;
+  background: var(--admin-card-bg) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+}
+
+#result_list {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  background: var(--admin-card-bg) !important;
+  margin: 0 !important;
+}
+
+#result_list thead th {
+  background: #0f172a !important;
+  border-bottom: 1px solid var(--admin-border) !important;
+  border-top: none !important;
+  padding: 13px 16px !important;
+  color: var(--admin-cyan) !important;
+  font-size: 0.88rem !important;
+  font-weight: 800 !important;
+  text-align: start !important;
+  letter-spacing: 0.2px !important;
+}
+
+#result_list thead th a {
+  color: var(--admin-cyan) !important;
+  text-decoration: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+#result_list tbody tr {
+  background: #0b101d !important;
+  transition: background 0.15s ease !important;
+}
+
+#result_list tbody tr:nth-child(even) {
+  background: #0e1424 !important;
+}
+
+#result_list tbody tr:hover {
+  background: #131b2e !important;
+}
+
+#result_list tbody tr:not(:last-child) td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+#result_list tbody td {
+  padding: 13px 16px !important;
+  color: #e2e8f0 !important;
+  font-size: 0.88rem !important;
+  vertical-align: middle !important;
+}
+
+/* Cyan Link for Names */
+.admin-cyan-link {
+  color: var(--admin-cyan) !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+  transition: color 0.15s ease !important;
+}
+
+.admin-cyan-link:hover {
+  color: #67e8f9 !important;
+  text-decoration: underline !important;
+}
+
+/* Badges for Roles */
+.badge-role-owner {
+  display: inline-block;
+  padding: 3px 14px;
+  border-radius: 999px;
+  background: rgba(249, 115, 22, 0.15);
+  color: #f97316;
+  border: 1px solid rgba(249, 115, 22, 0.4);
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.badge-role-none {
+  display: inline-block;
+  padding: 3px 14px;
+  border-radius: 999px;
+  background: transparent;
+  color: #64748b;
+  border: 1px dashed #475569;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.badge-role-super {
+  display: inline-block;
+  padding: 3px 14px;
+  border-radius: 999px;
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.badge-role-staff {
+  display: inline-block;
+  padding: 3px 14px;
+  border-radius: 999px;
+  background: rgba(30, 58, 138, 0.5);
+  color: #93c5fd;
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+/* Active Toggle Switch */
+.admin-switch {
+  position: relative;
+  display: inline-block;
+  width: 42px;
+  height: 22px;
+  cursor: pointer;
+  margin: 0;
+  vertical-align: middle;
+}
+
+.admin-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.admin-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #334155;
+  transition: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 22px;
+}
+
+.admin-slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: #ffffff;
+  transition: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.admin-switch input:checked + .admin-slider {
+  background-color: var(--admin-pink);
+}
+
+.admin-switch input:checked + .admin-slider:before {
+  transform: translateX(20px);
+}
+
+/* Trash Action Button */
+.admin-trash-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.08);
+  color: #ef4444;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.admin-trash-btn:hover {
+  background: rgba(239, 68, 68, 0.22);
+  border-color: #ef4444;
+  transform: scale(1.08);
+  color: #f87171;
+}
+
+/* Bottom Paginator / Result Count (e.g. الموظفين 2) */
+.paginator {
+  background: transparent !important;
+  border: none !important;
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  font-size: 0.95rem !important;
+  padding: 16px 0 0 0 !important;
+}
