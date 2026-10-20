@@ -22,6 +22,17 @@ import './NeoAuth.css';
  * Neo-Brutalist 3D Flip Card Auth Modal
  * Enhanced with interactive Google Account Chooser & "Remember Me" option
  */
+function formatAuthError(err, isAr) {
+  if (!err) return '';
+  const msg = typeof err === 'string' ? err : err.message || '';
+  if (msg.toLowerCase().includes('failed to fetch') || msg.toLowerCase().includes('networkerror')) {
+    return isAr
+      ? 'تعذر الاتصال بالخادم، يرجى التحقق من اتصالك بالإنترنت والمحاولة مجدداً'
+      : 'Network connection issue, please check your connection and try again';
+  }
+  return msg;
+}
+
 export default function AuthModal({ isOpen, onClose, onLoginSuccess, lang }) {
   const isAr = lang === 'ar';
   const [isSignUp, setIsSignUp] = useState(false);
@@ -117,7 +128,7 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess, lang }) {
         onClose();
       }, 500);
     } catch (err) {
-      setErrorMsg(err.message || (isAr ? 'بيانات الدخول غير صحيحة' : 'Invalid credentials'));
+      setErrorMsg(formatAuthError(err, isAr) || (isAr ? 'بيانات الدخول غير صحيحة' : 'Invalid credentials'));
     } finally {
       setLoading(false);
     }
@@ -158,7 +169,7 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess, lang }) {
         onClose();
       }, 600);
     } catch (err) {
-      setErrorMsg(err.message || (isAr ? 'فشل إنشاء الحساب' : 'Registration failed'));
+      setErrorMsg(formatAuthError(err, isAr) || (isAr ? 'فشل إنشاء الحساب' : 'Registration failed'));
     } finally {
       setLoading(false);
     }
@@ -190,7 +201,7 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess, lang }) {
         onClose();
       }, 600);
     } catch (err) {
-      setErrorMsg(err.message || (isAr ? 'فشل تسجيل الدخول عبر Google' : 'Google Auth failed'));
+      setErrorMsg(formatAuthError(err, isAr) || (isAr ? 'فشل تسجيل الدخول عبر Google' : 'Google Auth failed'));
     } finally {
       setLoading(false);
       setActiveGoogleLoggingIn(null);
