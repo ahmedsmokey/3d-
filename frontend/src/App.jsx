@@ -23,7 +23,8 @@ import {
   fetchPrinters,
   fetchSystemStatus,
   fetchBanners,
-  logoutUser
+  logoutUser,
+  API_BASE
 } from './api';
 import {
   ShieldCheck,
@@ -552,16 +553,35 @@ export default function App() {
             </div>
           ) : products.length === 0 ? (
             <div className="empty-catalog glass-panel">
-              <RotateCcw size={40} className="empty-icon text-orange" />
-              <h4>{lang === 'ar' ? 'لم يتم العثور على قطع تطابق بحثك' : 'No spare parts matched your filters'}</h4>
-              <p>
-                {lang === 'ar'
-                  ? 'جرب اختيار موديل طابعة آخر أو إعادة ضبط فلاتر البحث'
-                  : 'Try selecting a different printer model or reset your search filters'}
-              </p>
-              <button className="btn btn-primary" onClick={resetAllFilters}>
-                {t.resetFilters}
-              </button>
+              {systemStatus?.status === 'offline' ? (
+                <>
+                  <RotateCcw size={40} className="empty-icon" style={{ stroke: '#f97316' }} />
+                  <h4 style={{ color: '#ea580c' }}>
+                    {lang === 'ar' ? 'تعذر جلب المنتجات (خادم الباك إند غير متصل)' : 'Backend API Unreachable'}
+                  </h4>
+                  <p style={{ maxWidth: '520px', margin: '8px auto 14px', lineHeight: 1.6 }}>
+                    {lang === 'ar'
+                      ? `الموقع غير قادر على الوصول لمسار البيانات (${API_BASE}). إذا كان الموقع منشوراً على Vercel، تأكد من نشر خادم الباك إند وضبط متغير البيئة VITE_API_BASE في إعدادات Vercel.`
+                      : `Unable to fetch catalog items because the API at (${API_BASE}) is offline or blocked. If deployed on Vercel, verify your backend server is active and set VITE_API_BASE in Environment Variables.`}
+                  </p>
+                  <button className="btn btn-secondary" onClick={() => setIsStatusOpen(true)}>
+                    {lang === 'ar' ? 'فحص تفاصيل الاتصال' : 'View Connection Details'}
+                  </button>
+                </>
+              ) : (
+                <>
+                  <RotateCcw size={40} className="empty-icon text-orange" />
+                  <h4>{lang === 'ar' ? 'لم يتم العثور على قطع تطابق بحثك' : 'No spare parts matched your filters'}</h4>
+                  <p>
+                    {lang === 'ar'
+                      ? 'جرب اختيار موديل طابعة آخر أو إعادة ضبط فلاتر البحث'
+                      : 'Try selecting a different printer model or reset your search filters'}
+                  </p>
+                  <button className="btn btn-primary" onClick={resetAllFilters}>
+                    {t.resetFilters}
+                  </button>
+                </>
+              )}
             </div>
           ) : (
             <div className="products-grid">

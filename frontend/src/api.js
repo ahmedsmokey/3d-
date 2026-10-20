@@ -1,4 +1,26 @@
-const API_BASE = import.meta.env?.VITE_API_BASE || 'http://127.0.0.1:8000/api';
+import fallbackData from './data/fallbackData.json';
+
+const rawApiBase = import.meta.env?.VITE_API_BASE || 'http://127.0.0.1:8000/api';
+export const API_BASE = rawApiBase.replace(/\/+$/, '');
+
+export function normalizeImageUrl(url) {
+  if (!url) return '';
+  if (typeof url !== 'string') return url;
+  if (url.includes('127.0.0.1:8000/media/') || url.includes('localhost:8000/media/')) {
+    return url.replace(/^http:\/\/(127\.0\.0\.1|localhost):8000/, '');
+  }
+  return url;
+}
+
+function normalizeProduct(p) {
+  return {
+    ...p,
+    image_url: normalizeImageUrl(p.image_url),
+    images: Array.isArray(p.images) && p.images.length > 0
+      ? p.images.map(normalizeImageUrl)
+      : (p.image_url ? [normalizeImageUrl(p.image_url)] : [])
+  };
+}
 
 function getCookie(name) {
   if (typeof document === 'undefined') return null;
@@ -13,7 +35,15 @@ function getCookie(name) {
 }
 
 export async function apiFetch(url, options = {}) {
-  const finalUrl = url.startsWith('http') ? url : `${API_BASE}${url.startsWith('/') ? '' : '/'}${url}`;
+  let finalUrl = url;
+  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    const cleanPath = url.startsWith('/') ? url : `/${url}`;
+    if (cleanPath.startsWith(API_BASE)) {
+      finalUrl = cleanPath;
+    } else {
+      finalUrl = `${API_BASE}${cleanPath}`;
+    }
+  }
   const headers = { ...(options.headers || {}) };
   const csrfToken = getCookie('csrftoken');
   if (csrfToken && !headers['X-CSRFToken']) {
@@ -48,10 +78,12 @@ export async function fetchCategories() {
   try {
     const res = await apiFetch(`${API_BASE}/categories/`);
     if (!res.ok) throw new Error('Failed to fetch categories');
-    return await res.json();
+    const data = await res.json();
+    if (Array.isArray(data) && data.length > 0) return data;
+    return fallbackData.categories || [];
   } catch (err) {
     console.warn('Falling back for categories:', err.message);
-    return [];
+    return fallbackData.categories || [];
   }
 }
 
@@ -97,10 +129,12 @@ export async function fetchBrands() {
   try {
     const res = await apiFetch(`${API_BASE}/brands/`);
     if (!res.ok) throw new Error('Failed to fetch brands');
-    return await res.json();
+    const data = await res.json();
+    if (Array.isArray(data) && data.length > 0) return data;
+    return fallbackData.brands || [];
   } catch (err) {
     console.warn('Falling back for brands:', err.message);
-    return [];
+    return fallbackData.brands || [];
   }
 }
 
@@ -146,10 +180,16 @@ export async function fetchPrinters(brandId = null) {
     const url = brandId ? `${API_BASE}/printers/?brand=${brandId}` : `${API_BASE}/printers/`;
     const res = await apiFetch(url);
     if (!res.ok) throw new Error('Failed to fetch printers');
-    return await res.json();
+    const data = await res.json();
+    if (Array.isArray(data) && data.length > 0) return data;
+    let list = fallbackData.printers || [];
+    if (brandId) list = list.filter((p) => String(p.brand) === String(brandId));
+    return list;
   } catch (err) {
     console.warn('Falling back for printers:', err.message);
-    return [];
+    let list = fallbackData.printers || [];
+    if (brandId) list = list.filter((p) => String(p.brand) === String(brandId));
+    return list;
   }
 }
 
@@ -202,12 +242,47 @@ export async function fetchProducts(filters = {}) {
     if (filters.deals) params.append('deals', 'true');
 
     const res = await apiFetch(`${API_BASE}/products/?${params.toString()}`);
-    if (!res.ok) throw new Error('Failed to fetch products');
+    if (!res.ok) {
+      console.error(`[API Error] fetchProducts returned status ${res.status} (${res.statusText}) from ${res.url}`);
+      throw new Error(`Failed to fetch products: ${res.status}`);
+    }
     const data = await res.json();
-    return data.results || data;
+    const results = data.results || data;
+    if (Array.isArray(results) && results.length > 0) {
+      return results.map(normalizeProduct);
+    }
+    return results;
   } catch (err) {
-    console.warn('Falling back for products:', err.message);
-    return [];
+    console.warn(`[Products Fetch] Using fallback catalog data (${err.message})`);
+    let items = (fallbackData.products || []).map(normalizeProduct);
+    if (filters.category) {
+      items = items.filter(
+        (p) =>
+          String(p.category) === String(filters.category) ||
+          p.category_slug === filters.category
+      );
+    }
+    if (filters.deals) {
+      items = items.filter((p) => !!p.is_deal);
+    }
+    if (filters.featured) {
+      items = items.filter((p) => !!p.is_featured);
+    }
+    if (filters.search) {
+      const q = filters.search.toLowerCase().trim();
+      items = items.filter(
+        (p) =>
+          (p.name_ar && p.name_ar.toLowerCase().includes(q)) ||
+          (p.name_en && p.name_en.toLowerCase().includes(q)) ||
+          (p.sku && p.sku.toLowerCase().includes(q))
+      );
+    }
+    if (filters.sort === 'price_asc') {
+      items.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+    } else if (filters.sort === 'price_desc') {
+      items.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
+    }
+    return items;
   }
 }
 
@@ -469,10 +544,14 @@ export async function fetchBanners() {
   try {
     const res = await apiFetch(`${API_BASE}/banners/`);
     if (!res.ok) throw new Error('Failed to fetch banners');
-    return await res.json();
+    const data = await res.json();
+    if (Array.isArray(data) && data.length > 0) {
+      return data.map((b) => ({ ...b, image_url: normalizeImageUrl(b.image_url) }));
+    }
+    return (fallbackData.banners || []).map((b) => ({ ...b, image_url: normalizeImageUrl(b.image_url) }));
   } catch (err) {
     console.warn('Falling back for banners:', err.message);
-    return [];
+    return (fallbackData.banners || []).map((b) => ({ ...b, image_url: normalizeImageUrl(b.image_url) }));
   }
 }
 

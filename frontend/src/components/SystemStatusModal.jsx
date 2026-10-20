@@ -1,5 +1,6 @@
 import React from 'react';
 import { X, Database, CheckCircle, Server, Terminal, Shield, ArrowRight } from 'lucide-react';
+import { API_BASE } from '../api';
 
 export default function SystemStatusModal({
   isOpen,
@@ -46,7 +47,7 @@ export default function SystemStatusModal({
               <span className={`pulse-dot ${isOnline ? 'online' : 'checking'}`}></span>
               {isOnline ? 'Django 6.1 (Online)' : 'Connecting...'}
             </div>
-            <div className="stat-hint">http://127.0.0.1:8000/api</div>
+            <div className="stat-hint">{API_BASE}</div>
           </div>
 
           <div className="status-stat-card glass-panel">

@@ -185,6 +185,19 @@ else:
         'http://127.0.0.1:3000',
     ]
 
+csrf_env = os.getenv('CSRF_TRUSTED_ORIGINS')
+if csrf_env:
+    CSRF_TRUSTED_ORIGINS = [o.strip() for o in csrf_env.split(',') if o.strip()]
+elif cors_env:
+    CSRF_TRUSTED_ORIGINS = [o.strip() for o in cors_env.split(',') if o.strip()]
+else:
+    CSRF_TRUSTED_ORIGINS = [
+        'http://localhost:5173',
+        'http://127.0.0.1:5173',
+        'http://localhost:3000',
+        'http://127.0.0.1:3000',
+    ]
+
 # ==============================================================================
 # HTTPS, SSL/TLS & SECURITY HEADERS
 # ==============================================================================
