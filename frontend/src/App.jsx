@@ -248,6 +248,16 @@ export default function App() {
     return () => clearTimeout(timer);
   }, [selectedCategory, selectedBrand, selectedPrinter, searchTerm, sortBy, brands]);
 
+  // Admin role check
+  const isAdmin = user?.role === 'admin' || user?.is_staff || user?.is_superuser;
+
+  // Security guard: Only authorized admin users can view the admin dashboard
+  useEffect(() => {
+    if (currentView === 'admin' && !isAdmin) {
+      setCurrentView('store');
+    }
+  }, [currentView, isAdmin]);
+
   // Handle Logout
   const handleLogout = async () => {
     await logoutUser();
@@ -386,8 +396,8 @@ export default function App() {
         }}
       />
 
-      {/* VIEW 1: CUSTOM ADMIN DASHBOARD */}
-      {currentView === 'admin' ? (
+      {/* VIEW 1: CUSTOM ADMIN DASHBOARD (Protected: Admin Only) */}
+      {currentView === 'admin' && isAdmin ? (
         <AdminDashboard
           lang={lang}
           t={t}

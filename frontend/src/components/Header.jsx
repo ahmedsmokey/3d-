@@ -52,6 +52,8 @@ export default function Header({
   const [mobileAccordion, setMobileAccordion] = useState(null);
   const searchContainerRef = useRef(null);
 
+  const isAdmin = user?.role === 'admin' || user?.is_staff || user?.is_superuser;
+
   // Prevent body scroll when mobile drawer is open
   useEffect(() => {
     if (isMobileMenuOpen) {
@@ -293,37 +295,39 @@ export default function Header({
 
           {/* Left: Action Controls */}
           <div className="nav-actions-futuristic">
-            {/* Dashboard button */}
-            <button
-              className="nav-admin-pill-btn"
-              onClick={() => {
-                if (currentView === 'admin') {
-                  setCurrentView('store');
-                } else {
-                  setCurrentView('admin');
+            {/* Dashboard button (Admin only) */}
+            {isAdmin && (
+              <button
+                className="nav-admin-pill-btn"
+                onClick={() => {
+                  if (currentView === 'admin') {
+                    setCurrentView('store');
+                  } else {
+                    setCurrentView('admin');
+                  }
+                }}
+                title={
+                  currentView === 'admin'
+                    ? lang === 'ar'
+                      ? 'الرجوع للمتجر'
+                      : 'Back to Store'
+                    : lang === 'ar'
+                    ? 'لوحة التحكم'
+                    : 'Dashboard'
                 }
-              }}
-              title={
-                currentView === 'admin'
-                  ? lang === 'ar'
-                    ? 'الرجوع للمتجر'
-                    : 'Back to Store'
-                  : lang === 'ar'
-                  ? 'لوحة التحكم'
-                  : 'Dashboard'
-              }
-            >
-              <LayoutGrid size={16} />
-              <span className="nav-admin-btn-text">
-                {currentView === 'admin'
-                  ? lang === 'ar'
-                    ? 'المتجر الرئيسي'
-                    : 'View Store'
-                  : lang === 'ar'
-                  ? 'لوحة التحكم'
-                  : 'Dashboard'}
-              </span>
-            </button>
+              >
+                <LayoutGrid size={16} />
+                <span className="nav-admin-btn-text">
+                  {currentView === 'admin'
+                    ? lang === 'ar'
+                      ? 'المتجر الرئيسي'
+                      : 'View Store'
+                    : lang === 'ar'
+                    ? 'لوحة التحكم'
+                    : 'Dashboard'}
+                </span>
+              </button>
+            )}
 
             {/* Commerce & User Actions Group */}
             <div className="nav-action-group">
@@ -629,22 +633,24 @@ export default function Header({
                 )}
               </div>
 
-              {/* Prominent Dashboard / Store Button */}
-              <button
-                type="button"
-                className="drawer-action-pill highlight-dashboard"
-                onClick={() => {
-                  setCurrentView(currentView === 'admin' ? 'store' : 'admin');
-                  setIsMobileMenuOpen(false);
-                }}
-              >
-                <LayoutGrid size={18} />
-                <span>
-                  {currentView === 'admin'
-                    ? (lang === 'ar' ? 'الرجوع للمتجر الرئيسي' : 'Back to Store')
-                    : (lang === 'ar' ? 'لوحة التحكم والإدارة' : 'Admin Dashboard')}
-                </span>
-              </button>
+              {/* Prominent Dashboard / Store Button (Admin only) */}
+              {isAdmin && (
+                <button
+                  type="button"
+                  className="drawer-action-pill highlight-dashboard"
+                  onClick={() => {
+                    setCurrentView(currentView === 'admin' ? 'store' : 'admin');
+                    setIsMobileMenuOpen(false);
+                  }}
+                >
+                  <LayoutGrid size={18} />
+                  <span>
+                    {currentView === 'admin'
+                      ? (lang === 'ar' ? 'الرجوع للمتجر الرئيسي' : 'Back to Store')
+                      : (lang === 'ar' ? 'لوحة التحكم والإدارة' : 'Admin Dashboard')}
+                  </span>
+                </button>
+              )}
 
               {/* Navigation Items */}
               <div className="mobile-drawer-nav-sections">

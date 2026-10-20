@@ -636,18 +636,20 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess, lang }) {
                       </label>
                     </div>
 
-                    {/* Quick Demo Credentials */}
-                    <div className="neo-demo-bar">
-                      <button
-                        type="button"
-                        className="neo-demo-chip"
-                        onClick={() => fillCredential('admin', 'admin123')}
-                        title={isAr ? 'دخول تجريبي بضغطة زر' : 'Quick Demo Admin'}
-                      >
-                        <span>🔑</span>
-                        <span>admin (المدير العام)</span>
-                      </button>
-                    </div>
+                    {/* Quick Demo Credentials (Development Only) */}
+                    {import.meta.env.DEV && (
+                      <div className="neo-demo-bar">
+                        <button
+                          type="button"
+                          className="neo-demo-chip"
+                          onClick={() => fillCredential('admin', 'admin123')}
+                          title={isAr ? 'دخول تجريبي بضغطة زر (وضع التطوير)' : 'Quick Demo Admin (Dev Mode)'}
+                        >
+                          <span>🔑</span>
+                          <span>admin (المدير العام)</span>
+                        </button>
+                      </div>
+                    )}
 
                     <button className="neo-submit-btn" type="submit" disabled={loading}>
                       {loading ? (
